@@ -3,12 +3,12 @@ kind: ClusterRoleBinding
 metadata:
   labels:
     kubernetes.io/bootstrapping: rbac-defaults
-  name: cluster-admin2
+  name: cicd-software-cluster-admin
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: cluster-admin
 subjects:
-- namespace: test
+- namespace: n-a-m-e-s-p-a-c-e
   kind: ServiceAccount
   name: default
