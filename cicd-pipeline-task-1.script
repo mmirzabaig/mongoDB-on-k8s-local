@@ -1,0 +1,37 @@
+#! /bin/bash 
+
+# CREATE NEW NAMEPSACE CALLED TEST
+# DEPLOY CLUSTER ROLE BINDINB THAT BINDS CLUSTER ADMIN ROLE TO DEFAULT SERVICE ACCOUNT IN THE TEST NAMESPACE
+# DEPLOY MONGO DB DATABASE
+
+kubectl create ns test
+kubectl apply -n test -f clusterrolebinding.yaml
+kubectl apply -n test -f mongodb-statefulset.yaml
+
+# Basic if statement
+for (( i=0; i<250; i++))
+do
+
+POD_IP=$(kubectl get pod -n test -l="app=mongodb" -o yaml | grep podIP:)
+LENGTH=`echo $POD_IP | awk '{print length}'`
+
+if [ $LENGTH -lt 1 ]; 
+then
+echo "mongodb pod not running"
+echo $i "SLEEPING FOR TWO SECONDS"
+sleep 2
+else
+POD_IP="${POD_IP:11}"
+break
+fi
+
+done
+# --------------------------------------------------------------
+# GRAB THE MONGODB IP FROM THE MONGO DB DATABASE 
+echo "MongoDB Pod IP"
+echo $POD_IP
+
+# --------------------------------------------------------------
+
+
+
